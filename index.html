@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивные Дебаты: Время Решать</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+<body id="body-main">
+
+    <!-- Контейнер для фоновых анимированных слов -->
+    <div id="background-animations"></div>
+
+    <!-- Основной контент -->
+    <div class="main-container" id="main-container">
+
+        <!-- Секция Таймера и Игры -->
+        <div id="timer-game-section" class="section active-section">
+            <!-- Круговой таймер -->
+            <div class="timer-wrapper">
+                <svg class="timer-svg" viewBox="0 0 100 100">
+                    <circle class="timer-bg-circle" cx="50" cy="50" r="45"></circle>
+                    <circle class="timer-progress-circle" cx="50" cy="50" r="45" transform="rotate(-90 50 50)"></circle>
+                </svg>
+                <div id="timer-text" class="timer-text">01:30</div>
+            </div>
+
+            <!-- Игровая зона для кликера -->
+            <div id="clicker-game-area">
+                 <!-- Кликабельные цели будут появляться здесь -->
+            </div>
+            <div id="score-display" class="score-display">Очки: 0</div>
+
+            <!-- Необязательная кнопка (?) для будущих подсказок -->
+            <!-- <button id="help-button" class="help-button">?</button> -->
+        </div>
+
+        <!-- Секция Выбора -->
+        <div id="choice-section" class="section">
+            <h2 class="choice-title">Время вышло! Ваш выбор?</h2>
+            <div class="choice-button-container">
+                <button id="peaceBtn" class="choice-button peace">ЗА МИР 🕊️</button>
+                <button id="warBtn" class="choice-button war">ПРОТИВ МИРА 💥</button>
+            </div>
+             <p id="loading-indicator-choice" class="loading-indicator" style="display: none;">Обработка голоса...</p>
+        </div>
+
+        <!-- Секция Результата -->
+        <div id="result-section" class="section">
+            <h2 id="result-message" class="result-title"></h2>
+            <div id="vote-counts" class="vote-results" style="margin-top: 25px; display: none;">
+                <p>Общие результаты:</p>
+                <span id="peace-count">За мир: ?</span>
+                <span id="war-count">Против мира: ?</span>
+                 <p id="vote-error" class="vote-error" style="display: none;">Не удалось загрузить результаты.</p>
+            </div>
+             <!-- Можно добавить кнопку "Попробовать снова" -->
+             <!-- <button id="restartBtn">Снова</button> -->
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
