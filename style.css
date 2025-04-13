@@ -1,0 +1,352 @@
+/* Обнуление и Базовые стили */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden; /* Важно, чтобы анимации не создавали скролл */
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #2c3e50, #1a252f); /* Темный базовый фон */
+    color: #ecf0f1;
+    transition: background 1s ease-out;
+    position: relative; /* Для позиционирования фоновых анимаций */
+}
+
+/* Контейнер для фоновых анимаций */
+#background-animations {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none; /* Чтобы не мешал кликам */
+}
+
+/* Анимированные слова */
+.animated-word {
+    position: absolute;
+    color: rgba(236, 240, 241, 0.15); /* Полупрозрачные */
+    font-size: 2rem;
+    font-weight: 700;
+    white-space: nowrap;
+    animation: floatFade 8s ease-in-out infinite alternate;
+    opacity: 0; /* Начальная прозрачность */
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+    will-change: transform, opacity; /* Оптимизация */
+}
+/* Анимация для слов */
+@keyframes floatFade {
+    0% { transform: translateY(20px) scale(0.9); opacity: 0; }
+    25% { opacity: 1; }
+    75% { opacity: 1; }
+    100% { transform: translateY(-20px) scale(1.1); opacity: 0; }
+}
+
+
+/* Основной контейнер и секции */
+.main-container {
+    position: relative;
+    z-index: 1; /* Поверх фоновых анимаций */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px; /* Для 3D эффектов при переходах (по желанию) */
+}
+
+.section {
+    position: absolute;
+    width: 90%;
+    max-width: 700px; /* Ограничение ширины */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease-out, visibility 0.6s, transform 0.6s ease-out;
+    transform: scale(0.95) translateY(20px);
+    pointer-events: none;
+    will-change: opacity, transform;
+}
+
+.section.active-section {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+}
+
+
+/* --- Стили для Секции Таймера и Игры --- */
+#timer-game-section {
+    /* Стили для позиционирования таймера и игры */
+}
+
+/* Круговой Таймер */
+.timer-wrapper {
+    position: relative;
+    width: 300px; /* Размер таймера */
+    height: 300px;
+    margin-bottom: 30px;
+}
+@media (max-width: 700px) {
+    .timer-wrapper { width: 200px; height: 200px; margin-bottom: 20px; }
+}
+
+.timer-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.timer-bg-circle {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.1); /* Фон круга */
+    stroke-width: 8;
+}
+
+.timer-progress-circle {
+    fill: none;
+    stroke: #3498db; /* Цвет прогресса (синий) */
+    stroke-width: 10; /* Чуть толще фона */
+    stroke-linecap: round; /* Скругленные концы */
+    stroke-dasharray: 283; /* Длина окружности (2 * PI * 45) */
+    stroke-dashoffset: 283; /* Начальное смещение = вся длина (пустой) */
+    transition: stroke-dashoffset 0.5s linear, stroke 0.5s ease; /* Плавные переходы */
+}
+
+.timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Orbitron', sans-serif; /* Техно-шрифт */
+    font-size: 4.5em; /* Крупные цифры */
+    font-weight: 700;
+    color: #ecf0f1;
+    text-shadow: 0 0 10px rgba(52, 152, 219, 0.5); /* Легкое свечение */
+}
+@media (max-width: 700px) {
+    .timer-text { font-size: 3em; }
+}
+
+
+/* Игровая зона для кликера */
+#clicker-game-area {
+    position: relative; /* Чтобы цели позиционировались относительно нее */
+    width: 100%;
+    height: 150px; /* Область для появления целей */
+    margin-bottom: 15px;
+    /* border: 1px dashed rgba(255,255,255,0.2); Опционально для отладки */
+}
+
+/* Стиль для кликабельной цели */
+.clicker-target {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: #e74c3c; /* Красный цвет цели */
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    color: white;
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
+    opacity: 0;
+    animation: fadeInTarget 0.3s forwards;
+}
+.clicker-target:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 25px rgba(231, 76, 60, 1);
+}
+.clicker-target.clicked {
+    animation: popOutTarget 0.3s forwards;
+}
+
+@keyframes fadeInTarget { from { opacity: 0; transform: scale(0.5);} to { opacity: 1; transform: scale(1);} }
+@keyframes popOutTarget { from { opacity: 1; transform: scale(1);} to { opacity: 0; transform: scale(1.3);} }
+
+
+/* Отображение очков */
+.score-display {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #bdc3c7;
+    margin-top: 10px;
+}
+
+
+/* --- Стили для Секции Выбора --- */
+.choice-title {
+    font-size: 2.5em;
+    margin-bottom: 40px;
+    font-weight: 900; /* Очень жирный */
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+@media (max-width: 700px) { .choice-title { font-size: 2em; } }
+
+
+.choice-button-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px; /* Расстояние между кнопками */
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.choice-button {
+    font-size: 1.8em;
+    padding: 25px 45px;
+    margin: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase; /* Заглавные буквы */
+    transition: all 0.3s ease;
+    flex-grow: 1;
+    flex-basis: 200px; /* Минимальная ширина */
+    max-width: 300px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden; /* Для внутренних эффектов */
+}
+.choice-button:before { /* Псевдоэлемент для ховер-эффекта */
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+    z-index: 0;
+}
+.choice-button:hover:before {
+     width: 250%;
+     height: 250%;
+}
+.choice-button span, .choice-button i { /* Текст и иконка поверх псевдоэлемента */
+    position: relative;
+    z-index: 1;
+}
+.choice-button:active {
+    transform: scale(0.96);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.choice-button.peace {
+    background: linear-gradient(145deg, #2ecc71, #27ae60); /* Зеленый */
+}
+.choice-button.war {
+    background: linear-gradient(145deg, #e74c3c, #c0392b); /* Красный */
+}
+
+.loading-indicator { color: #bdc3c7; font-style: italic; margin-top: 20px; }
+
+/* --- Стили для Секции Результата --- */
+.result-title {
+    font-size: 3em;
+    margin-bottom: 20px;
+    font-weight: 900;
+    transition: color 0.5s ease;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+@media (max-width: 700px) { .result-title { font-size: 2.2em; } }
+
+
+.vote-results {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 15px 25px;
+    border-radius: 10px;
+    margin-top: 25px;
+    font-size: 1.2em;
+    line-height: 1.7;
+    width: 80%;
+    max-width: 400px;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+.vote-results p:first-child {
+    margin: 0 0 10px 0;
+    font-weight: 700;
+}
+.vote-results span {
+    display: inline-block;
+    margin: 0 15px;
+    font-weight: 400;
+}
+.vote-error {
+    color: #ff7675; /* Цвет ошибки */
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+/* ============ ТЕМЫ ПРИ ВЫБОРЕ ============ */
+
+/* Тема "Мир" */
+body.peace-chosen {
+    background: linear-gradient(135deg, #a8e063, #56ab2f); /* Сочный зеленый градиент */
+}
+/* Эффекты для темы мира (пример) */
+body.peace-chosen::after {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 70%);
+    animation: pulseGlow 4s infinite ease-in-out;
+    pointer-events: none;
+    z-index: -1; /* Под фоном но поверх основного градиента */
+}
+@keyframes pulseGlow { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 0.6; transform: scale(1.2); } }
+
+body.peace-chosen .result-title { color: #fff; text-shadow: 0 0 15px #d4ffaa; }
+body.peace-chosen .vote-results { background-color: rgba(255, 255, 255, 0.15); color: #fff; }
+body.peace-chosen .vote-results p:first-child { color: #eaffd4; }
+
+/* Тема "Война" */
+body.war-chosen {
+    background: linear-gradient(135deg, #4e0000, #1f0000); /* Темный кровавый градиент */
+}
+/* Эффекты для темы войны (пример) */
+body.war-chosen::before { /* Имитация статики или помех */
+     content: "";
+     position: absolute; top: 0; left: 0;
+     width: 100%; height: 100%;
+     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23ffffff' fill-opacity='0.05' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+     animation: staticFlicker 0.15s infinite;
+     pointer-events: none;
+     z-index: -1;
+}
+@keyframes staticFlicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+body.war-chosen .result-title { color: #ff8a80; text-shadow: 0 0 15px #ff5252; animation: shakeText 0.5s ease-in-out 2; }
+body.war-chosen .vote-results { background-color: rgba(0, 0, 0, 0.3); color: #ffcdd2; }
+body.war-chosen .vote-results p:first-child { color: #ff8a80; }
+
+@keyframes shakeText {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px) rotate(-1deg); }
+  75% { transform: translateX(3px) rotate(1deg); }
+}
+
+
+/* Медиа-запросы для адаптивности (пример) */
+@media (max-width: 700px) {
+     .vote-results { width: 90%; font-size: 1em;}
+     .vote-results span { display: block; margin: 5px 0; }
+     .choice-button { font-size: 1.4em; padding: 20px 30px; max-width: 80%; }
+     .animated-word { font-size: 1.5rem;}
+}
